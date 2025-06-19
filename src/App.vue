@@ -1,19 +1,6 @@
 <script setup>
-import { ref } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
-
-// Daftar project/pesan
-const projects = ref([
-  'Belajar Vue Router',
-  'Membuat halaman Contact',
-  'Menambahkan fitur hapus project'
-])
-
-// Fungsi untuk menghapus project
-function removeProject(index) {
-  projects.value.splice(index, 1)
-}
 </script>
 
 <template>
@@ -31,17 +18,6 @@ function removeProject(index) {
   </header>
 
   <RouterView />
-
-  <!-- Daftar Project -->
-  <section class="project-section">
-    <h2>Daftar Project</h2>
-    <ul>
-      <li v-for="(project, index) in projects" :key="index">
-        {{ project }}
-        <button @click="removeProject(index)">Hapus</button>
-      </li>
-    </ul>
-  </section>
 </template>
 
 <style scoped>
@@ -78,49 +54,6 @@ nav a {
 
 nav a:first-of-type {
   border: 0;
-}
-
-.project-section {
-  margin: 2rem auto;
-  padding: 1rem;
-  max-width: 600px;
-  background: #f5f5f5;
-  border-radius: 8px;
-}
-
-.project-section h2 {
-  margin-bottom: 1rem;
-  text-align: center;
-  color: #2c3e50;
-}
-
-.project-section ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.project-section li {
-  margin: 0.5rem 0;
-  padding: 0.5rem;
-  background: #ffffff;
-  border: 1px solid #ddd;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 4px;
-}
-
-.project-section button {
-  background-color: #ff5c5c;
-  border: none;
-  color: white;
-  padding: 0.3rem 0.7rem;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.project-section button:hover {
-  background-color: #e74c3c;
 }
 
 @media (min-width: 1024px) {
