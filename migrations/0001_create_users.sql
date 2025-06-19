@@ -6,4 +6,4 @@ CREATE TABLE IF NOT EXISTS users (
     address TEXT
 );
 
-INSERT INTO users(name, address) VALUES ('Dimas', 'Ngadimulyo'), ('Andre', 'Sukorejo'), ('Anji', 'Palang');
+INSERT INTO users(name, address) VALUES ('Andre', 'Purwosari'), ('Andian', 'Sukorejo'), ('Ana', 'Pandaaan');
