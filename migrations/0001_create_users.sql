@@ -1,4 +1,4 @@
--- Migration number: 0001 	 2025-06-19T13:08:38.683Z
+-- Migration number: 0001 	2025-06-28T20:30:29.086Z
 
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -6,4 +6,4 @@ CREATE TABLE IF NOT EXISTS users (
     address TEXT
 );
 
-INSERT INTO users(name, address) VALUES ('Andre', 'Purwosari'), ('Andian', 'Sukorejo'), ('Ana', 'Pandaaan').
+INSERT INTO users(name, address) VALUES ('Andre', 'Purwosari'), ('Andian', 'Sukorejo'), ('Ana', 'Pandaaan');
