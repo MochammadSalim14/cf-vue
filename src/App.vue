@@ -38,7 +38,7 @@ function hapusPesan(index) {
   max-width: 400px;
   margin: 30px auto;
   padding: 20px;
-  background: #f9f9f9;
+  background:rgb(9, 248, 248);
   border-radius: 10px;
 }
 
