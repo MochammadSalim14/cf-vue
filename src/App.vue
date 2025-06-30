@@ -1,12 +1,12 @@
 <template>
   <div class="p-4">
-    <h1 class="text-xl font-bold mb-4">Tabel Data Barang</h1>
+    <h1 class="text-xl font-bold mb-4">tokoh buah mak jum</h1>
 
     <!-- Form tambah / edit -->
     <form @submit.prevent="submitForm" class="mb-4 space-x-2">
       <input
         v-model="formData.name"
-        placeholder="Nama Barang"
+        placeholder="Nama Buah"
         class="border p-1 rounded"
       />
       <input
@@ -70,8 +70,8 @@
 import { ref } from 'vue'
 
 const items = ref([
-  { name: 'Pensil', price: 1000 },
-  { name: 'Buku', price: 5000 },
+  { name: 'buah duren', price: 10.000 },
+  { name: 'Buah naga', price: 15.000 },
 ])
 
 const formData = ref({ name: '', price: '' })
