@@ -1,0 +1,10 @@
+-- Migration: Create table transaksi
+
+CREATE TABLE IF NOT EXISTS transaksi (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  nama TEXT NOT NULL,
+  harga INTEGER NOT NULL,
+  jumlah INTEGER NOT NULL,
+  total INTEGER GENERATED ALWAYS AS (harga * jumlah) STORED,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

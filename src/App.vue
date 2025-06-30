@@ -1,146 +1,95 @@
 <template>
-  <div class="todo-app">
-    <h1>Haii Yusak Ardianto!!</h1>
-    <form @submit.prevent="add" class="form">
-      <input type="text" v-model="newTodo" placeholder="add new todo..." class="input">
-      <button type="submit" class="add-btn">Add</button>
-    </form>
+  <div class="p-6 bg-green-50 min-h-screen">
+    <h1 class="text-3xl font-bold mb-4 text-green-700">Manajemen Obat</h1>
 
-    <h3 class="title">My To Do List</h3>
-    <div class="filter-buttons">
-      <button @click="filter = 'all'">Show All</button>
-      <button @click="filter = 'done'">Done Only</button>
-      <button @click="filter = 'undone'">Undone Only</button>
+    <!-- Form tambah/edit -->
+    <div class="mb-6 bg-white p-4 rounded shadow-md">
+      <input v-model="form.nama" placeholder="Nama Obat" class="input" />
+      <input v-model="form.deskripsi" placeholder="Deskripsi" class="input" />
+      <input v-model.number="form.harga" placeholder="Harga" class="input" type="number" />
+      <button @click="submitForm" class="btn bg-green-500 hover:bg-green-600 text-white">
+        {{ editingId ? 'Update' : 'Tambah' }}
+      </button>
     </div>
 
-    <div v-for="item in filtered" :key="item.id" class="todo-item" :class="{ done: item.isDone }">
-      <span>{{ item.name }}</span>
-      <div class="todo-actions">
-        <button v-if="!item.isDone" @click="todoStore.setAsDone(item.id)" class="done-btn">Set as done</button>
-        <button v-else @click="todoStore.setAsUnDone(item.id)" class="undone-btn">Set as undone</button>
-        <button @click="todoStore.deleteTodo(item.id)" class="delete-btn">Delete</button>
-      </div>
-    </div>
+    <!-- Tabel -->
+    <table class="w-full bg-white rounded shadow">
+      <thead class="bg-green-200 text-green-900">
+        <tr>
+          <th class="p-2 text-left">#</th>
+          <th class="p-2 text-left">Nama</th>
+          <th class="p-2 text-left">Deskripsi</th>
+          <th class="p-2 text-left">Harga</th>
+          <th class="p-2">Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(obat, i) in obatList" :key="obat.id" class="hover:bg-green-100">
+          <td class="p-2">{{ i + 1 }}</td>
+          <td class="p-2">{{ obat.nama }}</td>
+          <td class="p-2">{{ obat.deskripsi }}</td>
+          <td class="p-2">Rp {{ obat.harga.toLocaleString() }}</td>
+          <td class="p-2 flex gap-2 justify-center">
+            <button @click="editObat(obat)" class="btn text-blue-600">Edit</button>
+            <button @click="hapusObat(obat.id)" class="btn text-red-600">Hapus</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { useTodoStore } from '@/stores/todoStore'
-import bg from '@/assets/background.png'
+import { ref, onMounted } from 'vue'
 
+const obatList = ref([])
+const form = ref({ nama: '', deskripsi: '', harga: 0 })
+const editingId = ref(null)
 
-const todoStore = useTodoStore()
-const newTodo = ref('')
-const filter = ref('all')
-
-onMounted(() => {
-  todoStore.fetchTodos()
-})
-
-function add() {
-  if (newTodo.value.trim() !== '') {
-    todoStore.addTodo(newTodo.value.trim())
-    newTodo.value = ''
-  }
+const getObat = async () => {
+  const res = await fetch('/api/obat')
+  obatList.value = await res.json()
 }
 
-const filtered = computed(() => {
-  if (filter.value === 'done') return todoStore.doneOnly
-  if (filter.value === 'undone') return todoStore.undoneOnly
-  return todoStore.showAll
-})
+const submitForm = async () => {
+  const url = editingId.value
+    ? `/api/obat/${editingId.value}`
+    : '/api/obat'
+  const method = editingId.value ? 'PUT' : 'POST'
+
+  await fetch(url, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(form.value)
+  })
+
+  resetForm()
+  await getObat()
+}
+
+const editObat = (obat) => {
+  form.value = { ...obat }
+  editingId.value = obat.id
+}
+
+const hapusObat = async (id) => {
+  await fetch(`/api/obat/${id}`, { method: 'DELETE' })
+  await getObat()
+}
+
+const resetForm = () => {
+  form.value = { nama: '', deskripsi: '', harga: 0 }
+  editingId.value = null
+}
+
+onMounted(getObat)
 </script>
 
-<style scoped>
-.todo-item.done {
-  background-color: #d4edda;
-  border-color: #28a745;
-  color: #155724;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.todo-item.done span {
-  text-decoration: line-through;
-  font-style: italic;
-}
-
-.todo-actions button {
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-* {
-  background-image: url(v-bind('bg'));
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-}
-
-.todo-app {
-  max-width: 700px;
-  margin: 0 auto;
-  text-align: center;
-  padding: 20px;
-}
-.form {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
+<style>
 .input {
-  padding: 10px;
-  width: 300px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  @apply border p-2 rounded mb-2 mr-2 w-64;
 }
-.add-btn {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-.title {
-  margin-bottom: 10px;
-  font-weight: bold;
-}
-.filter-buttons button {
-  margin: 8px 5px;
-  padding: 8px 16px;
-  background-color: #6c757d;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-.todo-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid black;
-  border-radius: 10px;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-.todo-actions button {
-  margin-left: 5px;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-.done-btn {
-  background-color:rgb(51, 40, 167);
-  color: white;
-}
-.undone-btn {
-  background-color:rgb(197, 7, 255);
-  color: black;
-}
-.delete-btn {
-  background-color: #dc3545;
-  color: white;
+.btn {
+  @apply px-3 py-1 rounded transition;
 }
 </style>
